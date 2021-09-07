@@ -39,6 +39,7 @@ def connect(domains: List[str]) -> None:
     broker_keepalive = fetch_from_config("mqtt").get("keepalive")
     # TODO(ruairi): Move the hostname to a global variable.
     client = mqtt.Client(socket.gethostname())
+    client.on_connect = on_connect
     client.on_message = on_message
     client.username_pw_set(broker_username, broker_password)
     print(f"connecting to broker {broker_address}")
@@ -70,3 +71,6 @@ def on_message(client: mqtt.Client, userdata: Any, message: mqtt.MQTTMessage) ->
     print(f"Received node create message for key {client.public_key}")
     # TODO(ruairi): Verify return type here.
     print(link_handler(client))
+
+def on_connect(client: mqtt.Client, userdata: Any, flags: dict, rc: int, properties=None) -> None:
+    print("Connection returned " + str(rc))
