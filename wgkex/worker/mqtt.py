@@ -25,11 +25,8 @@ def fetch_from_config(var: str) -> Optional[Union[Dict[str, str], str]]:
     return config.get(var)
 
 
-def connect(domains: List[str]) -> None:
-    """Connect to MQTT for the given domains.
-
-    Argument:
-        domains: The domains to connect to.
+def connect() -> None:
+    """Connect to MQTT.
     """
     broker_address = fetch_from_config("mqtt").get("broker_url")
     broker_port = fetch_from_config("mqtt").get("broker_port")
@@ -46,10 +43,6 @@ def connect(domains: List[str]) -> None:
     if use_tls:
         client.tls_set()
     client.connect(broker_address, port=broker_port, keepalive=broker_keepalive)
-    for domain in domains:
-        topic = f"wireguard/{domain}/+"
-        print(f"Subscribing to topic {topic}")
-        client.subscribe(topic)
     client.loop_forever()
 
 
@@ -74,3 +67,8 @@ def on_message(client: mqtt.Client, userdata: Any, message: mqtt.MQTTMessage) ->
 
 def on_connect(client: mqtt.Client, userdata: Any, flags: dict, rc: int, properties=None) -> None:
     print("Connection returned " + str(rc))
+    domains = fetch_from_config("domains")
+    for domain in domains:
+        topic = f"wireguard/{domain}/+"
+        print(f"Subscribing to topic {topic}")
+        client.subscribe(topic)

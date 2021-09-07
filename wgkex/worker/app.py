@@ -35,7 +35,7 @@ def main():
         thread = threading.Thread(target = clean_up_worker, args=(domain[2:],))
         thread.start()
         clean_up_threads.append(thread)
-    mqtt.connect(domains)
+    mqtt.connect()
 
 
 if __name__ == "__main__":
