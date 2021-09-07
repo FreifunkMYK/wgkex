@@ -17,6 +17,7 @@ class DomainsNotInConfig(Error):
 def clean_up_worker(domain: str) -> None:
     while True:
         time.sleep(300)
+        print(f"Running cleanup task for {domain}")
         wg_flush_stale_peers(domain)
 
 def main():
@@ -30,6 +31,7 @@ def main():
         raise DomainsNotInConfig("Could not locate domains in configuration.")
     clean_up_threads = []
     for domain in domains:
+        print(f"Scheduling cleanup task for {domain}")
         thread = threading.Thread(target = clean_up_worker, args=(domain[2:],))
         thread.start()
         clean_up_threads.append(thread)
