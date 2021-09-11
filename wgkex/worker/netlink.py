@@ -137,12 +137,14 @@ def bridge_fdb_handler(client: WireGuardClient) -> Dict:
             ifindex=ip.link_lookup(ifname=client.vx_interface)[0],
             lladdr="00:00:00:00:00:00",
             dst=re.sub(r"/\d+$", "", client.old_lladdr),
+            NDA_IFINDEX=ip.link_lookup(ifname=client.wg_interface)[0],
         )
         return ip.fdb(
             "del" if client.remove else "append",
             ifindex=ip.link_lookup(ifname=client.vx_interface)[0],
             lladdr="00:00:00:00:00:00",
             dst=re.sub(r"/\d+$", "", client.lladdr),
+            NDA_IFINDEX=ip.link_lookup(ifname=client.wg_interface)[0],
         )
 
 
