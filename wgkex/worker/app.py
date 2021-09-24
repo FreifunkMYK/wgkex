@@ -18,7 +18,10 @@ def clean_up_worker(domain: str) -> None:
     while True:
         time.sleep(300)
         print(f"Running cleanup task for {domain}")
-        wg_flush_stale_peers(domain)
+        try:
+            wg_flush_stale_peers(domain)
+        except Exception as e:
+            print(e)
 
 def main():
     """Starts MQTT listener.
